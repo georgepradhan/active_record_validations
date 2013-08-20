@@ -9,11 +9,19 @@ get '/events/:id/show' do |id|
 end
 
 get '/events/new' do
-  # route to a view that has a form for creating
-  # an event
+  erb :event_new
 end
 
 post '/events/create' do
+  event = Event.new(params)
+  if event.save
+    redirect "/events/#{event.id}/show"
+  else
+    @errors = event.errors.full_messages
+    erb :errors
+  end
+end
+
   # this is the route triggered by submitting
   # a form on the /events/new view
   # this is where the validations are checked
@@ -23,4 +31,3 @@ post '/events/create' do
   # created event (redirect to id/show...),
   # which itself is wehre the errors will be 
   # displayed if there are any
-end
